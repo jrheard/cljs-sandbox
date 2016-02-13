@@ -12,11 +12,16 @@
                       :angle       s/Num
                       :speed       s/Num})
 
+(defn random-hex-color-string []
+  ; via https://gist.github.com/martinklepsch/8730542
+  (str "#" (.toString (rand-int 16rFFFFFF) 16)))
+
 (sm/defn generate-square []
   ; TODO use document width
   {:x           (rand-int 1000)
    :y           (rand-int 500)
    :side-length (max 10 (rand-int 25))
+   :fill        (random-hex-color-string)
    :angle       (rand-int 360)
    :speed       (rand-int 10)})
 
@@ -29,9 +34,10 @@
   )
 
 (defn draw-square [square]
-  [:rect {:x (square :x)
-          :y (square :y)
-          :width (square :side-length)
+  [:rect {:x      (square :x)
+          :y      (square :y)
+          :fill   (square :fill)
+          :width  (square :side-length)
           :height (square :side-length)}]
   )
 
@@ -41,7 +47,7 @@
      (for [[index square] (map-indexed vector (:squares state))]
        ^{:key (str "square-" index)} [draw-square square]))])
 
-(def state (r/atom {:squares (repeatedly 10 generate-square)}))
+(def state (r/atom {:squares (repeatedly 100 generate-square)}))
 
 (defn ^:export main []
   (r/render-component [draw-state state]
@@ -49,10 +55,10 @@
 
 
   #_(loop [i (count (:squares state))]
-    (go (while true
-          (<! (timeout (+ 50 (rand-int 50))))
-          (swap! state update-in [:squares i] next-square-state)))
-    (recur (inc i))))
+      (go (while true
+            (<! (timeout (+ 50 (rand-int 50))))
+            (swap! state update-in [:squares i] next-square-state)))
+      (recur (inc i))))
 
 
 (comment
