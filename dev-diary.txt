@@ -1,0 +1,3 @@
+2/13/16
+
+ok, let's try doing a little perf demo/test to see how svg+reagent stuff works
