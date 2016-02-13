@@ -23,23 +23,23 @@
    :side-length (max 10 (rand-int 25))
    :fill        (random-hex-color-string)
    :angle       (rand-int 360)
-   :speed       (rand-int 10)})
+   :speed       (max 1 (rand-int 10))})
 
 (sm/defn next-square-state :- Square
   [sq :- Square]
+  (js/console.log "sq is " (clj->js sq))
   (-> sq
-      (update :x (* (:speed sq) (Math/cos (:angle sq))))
-      (update :y (* (:speed sq) (Math/sin (:angle sq)))))
-  {:x (+ (:x sq))}
+      (update-in [:x] #(+ % (* (:speed sq) (Math/cos (:angle sq)))))
+      (update-in [:y] #(+ % (* (:speed sq) (Math/sin (:angle sq))))))
   )
 
 (defn draw-square [square]
+  (js/console.log (clj->js square))
   [:rect {:x      (square :x)
           :y      (square :y)
           :fill   (square :fill)
           :width  (square :side-length)
-          :height (square :side-length)}]
-  )
+          :height (square :side-length)}])
 
 (defn draw-state [state]
   [:svg {:width 1000 :height 500}
@@ -47,19 +47,16 @@
      (for [[index square] (map-indexed vector (:squares state))]
        ^{:key (str "square-" index)} [draw-square square]))])
 
-(def state (r/atom {:squares (repeatedly 100 generate-square)}))
+(def state (r/atom {:squares (apply vector (repeatedly 100 generate-square))}))
 
 (defn ^:export main []
   (r/render-component [draw-state state]
                       (js/document.getElementById "content"))
 
-
-  #_(loop [i (count (:squares state))]
+  (loop [i 0]
+    (when (< i (count (:squares @state)))
       (go (while true
             (<! (timeout (+ 50 (rand-int 50))))
             (swap! state update-in [:squares i] next-square-state)))
-      (recur (inc i))))
+      (recur (inc i)))))
 
-
-(comment
-  )
