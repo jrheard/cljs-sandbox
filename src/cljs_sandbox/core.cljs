@@ -16,25 +16,52 @@
   ; via https://gist.github.com/martinklepsch/8730542
   (str "#" (.toString (rand-int 16rFFFFFF) 16)))
 
+; TODO use document width/height
+(def WIDTH 1000)
+(def HEIGHT 500)
+
 (sm/defn generate-square []
-  ; TODO use document width
-  {:x           (rand-int 1000)
-   :y           (rand-int 500)
+  {:x           (rand-int (- WIDTH 25))
+   :y           (rand-int (- HEIGHT 25))
    :side-length (max 10 (rand-int 25))
    :fill        (random-hex-color-string)
-   :angle       (rand-int 360)
-   :speed       (max 1 (rand-int 10))})
+   :angle       (* (Math/random) 2 Math/PI)
+   :speed       1 #_(max 1 (rand-int 10))})
+
+(sm/defn x-axis-in-bounds? :- s/Bool
+  [sq :- Square]
+  (< 0 (sq :x) (+ (sq :side-length) (sq :x)) WIDTH))
+
+(sm/defn y-axis-in-bounds? :- s/Bool
+  [sq :- Square]
+  (< 0 (sq :y) (+ (sq :side-length) (sq :y)) HEIGHT))
+
+(sm/defn in-bounds? :- s/Bool
+  [sq :- Square]
+  (and (x-axis-in-bounds? sq) (y-axis-in-bounds? sq)))
 
 (sm/defn next-square-state :- Square
   [sq :- Square]
-  (js/console.log "sq is " (clj->js sq))
-  (-> sq
-      (update-in [:x] #(+ % (* (:speed sq) (Math/cos (:angle sq)))))
-      (update-in [:y] #(+ % (* (:speed sq) (Math/sin (:angle sq))))))
-  )
+  (js/console.log "next-square-state")
+  (let [next-axis-value (sm/fn [sq :- Square
+                                axis :- (s/enum :x :y)]
+                          (let [math-fn ({:x Math/cos :y Math/sin} axis)]
+                            (+ (sq axis)
+                               (* (sq :speed) (math-fn (sq :angle))))))
+        next-sq (assoc sq
+                  :x (next-axis-value sq :x)
+                  :y (next-axis-value sq :y))]
+    (if (in-bounds? next-sq)
+      next-sq
+      (let [big-angle (cond
+                        (and (not (x-axis-in-bounds? next-sq))
+                             (not (y-axis-in-bounds? next-sq))) (* Math/PI 6)
+                        (not (y-axis-in-bounds? next-sq)) (* Math/PI 4)
+                        (not (x-axis-in-bounds? next-sq)) (* Math/PI 2))]
+        (next-square-state (assoc sq :angle (- big-angle (sq :angle))))))))
 
 (defn draw-square [square]
-  (js/console.log (clj->js square))
+  (js/console.log "draw-square")
   [:rect {:x      (square :x)
           :y      (square :y)
           :fill   (square :fill)
@@ -53,10 +80,21 @@
   (r/render-component [draw-state state]
                       (js/document.getElementById "content"))
 
-  (loop [i 0]
-    (when (< i (count (:squares @state)))
-      (go (while true
-            (<! (timeout (+ 50 (rand-int 50))))
-            (swap! state update-in [:squares i] next-square-state)))
-      (recur (inc i)))))
+  ; TODO - kill all previous goblocks on reload
+
+  (let [ch (chan)]
+    (loop [i 0]
+      (when (< i 5 #_(count (:squares @state)))
+        (go (while true
+              ; TODO - have these guys add to a channel, and have a single goblock that dequeues and swap!s
+              (<! (timeout (+ 500 (rand-int 50))))
+              (>! ch i)
+              (swap! state update-in [:squares i] next-square-state)))
+        (recur (inc i))))
+
+    (go (while true
+          (let [idx (<! ch)]
+            (swap! state update-in [:squares idx] next-square-state))))
+
+    ))
 
