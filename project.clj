@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :min-lein-version "2.5.3"
+  :min-lein-version "2.5.2"
   
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170"]
@@ -26,9 +26,9 @@
                 :source-paths ["src"]
 
                 ;; If no code is to be run, set :figwheel true for continued automagical reloading
-                :figwheel {:on-jsload "cljs-sandbox.core/main"}
+                :figwheel {:on-jsload "cljs-sandbox.reagent-sandbox/main"}
 
-                :compiler {:main cljs-sandbox.core
+                :compiler {:main cljs-sandbox.reagent-sandbox
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/cljs_sandbox.js"
                            :output-dir "resources/public/js/compiled/out"

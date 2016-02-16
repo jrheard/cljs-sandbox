@@ -43,4 +43,11 @@ https://en.wikipedia.org/wiki/Dot_product
 https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
 https://www.safaribooksonline.com/library/view/html5-canvas/9781449308032/ch05s02.html ********<--------
 
+you know what, let's set aside this box demo for a bit and try making a minimal reproduction
+of the perf issue i'm seeing on the mortgage thing.
 
+start with a program that emits a few <p> tags or whatever, and verify that the only one that gets redrawn
+is the one that's changed. then try the same thing with svg and <rect> tags.
+
+ok, i did that and it really looks like only the relevant <p> and <rect> are recalculated+redrawn. what gives?
+back to the mortgage repo, where i probably should have kept all this...
