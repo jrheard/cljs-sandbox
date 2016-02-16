@@ -3,3 +3,31 @@
 ok, let's try doing a little perf demo/test to see how svg+reagent stuff works
 
 ok uh let's try doing just a few squares that bounce around the screen
+
+drawing pretty squares was pretty easy, haven't started making them bounce yet
+
+=====
+
+2/14/16
+
+the performance on animating these squares hasn't been completely great - time to
+add some console.logs to see if we're redrawing every square whenever one of them moves
+
+=====
+
+2/15/16
+
+quick braindump
+i want to understand why the mortgage UI has such bad performance, seems like the entire graph
+is redrawn whenever a bar is highlighted
+things i plan to do related to this problem:
+* read reagent source code
+* read react source code / API
+* get rid of mouseover/mouseout event handlers in mortgage demo, see if performance/behavior is at all affected;
+  just have some anonymous go-block toggle a bar selected/unselected every 2 seconds or whatever
+* for curiosity's sake, build a demo (partially implemented atm) in cljs-sandbox that tests framerate of a bunch
+  of moving squares bouncing around the screen
+* implement some way of detecting+displaying framerate, per above
+
+(mainly interested in performance of svg to see if i can use it for boi, and also just out of curiosity at this point)
+
