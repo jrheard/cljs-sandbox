@@ -31,3 +31,16 @@ things i plan to do related to this problem:
 
 (mainly interested in performance of svg to see if i can use it for boi, and also just out of curiosity at this point)
 
+====
+
+2/16/16
+
+ok crap i gotta learn about dot products and shit
+currently i'm focused on figuring out how to get these boxes to bounce off walls correctly
+relevant links:
+https://stackoverflow.com/questions/573084/how-to-calculate-bounce-angle
+https://en.wikipedia.org/wiki/Dot_product
+https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
+https://www.safaribooksonline.com/library/view/html5-canvas/9781449308032/ch05s02.html ********<--------
+
+
