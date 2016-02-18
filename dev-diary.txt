@@ -89,3 +89,43 @@ that they're always used in the right way. neat!
 
 looking forward to reading https://facebook.github.io/react/docs/working-with-the-browser.html#component-lifecycle , it's the
 main article i was looking for, i wanted to know what the hell is up with didMount, willMount, etc etc
+
+i wonder what reagent source will look like? also, what's a reaction?
+i'd guess that (r/atom) adds a watch function to the returned atom, which calls this.setState() on something-or-other
+i wonder how reagent uses props vs state?
+
+ok, i was worried that there'd be a ton of will/did mount/etc terminology to learn, but the above component-lifecycle
+link is really pretty straightforward.
+
+...and that's it! reading these docs was easier than i thought, neat.
+
+https://facebook.github.io/react/docs/animation.html - "an easy way to perform CSS transitions and animations
+when a React component enters or leaves the DOM"
+
+***** eep, here's an interesting tidbit from https://groups.google.com/forum/#!topic/reactjs/lZDjMmlTHOs
+"The `key` attribute is similar as an `id` but it *doesn't have to be globally unique*. It must only be unique
+among its siblings. Since `id` is already an existing concept in the DOM, we couldn't re-use the same name so we opted for `key`."
+wasn't sure til now re: whether or not keys had to be globally unique, good to know.
+
+======
+
+2/18/16
+
+setState() documented in https://facebook.github.io/react/docs/component-api.html
+lol basically all of the methods documented on that page are deprecated / will be removed soon
+interesting notes in isMounted() https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html
+
+https://facebook.github.io/react/docs/component-specs.html has notes on why render() should be pure
+
+writeup on their core abstraction and how they implemented it performantly at https://facebook.github.io/react/docs/reconciliation.html
+****super super good article, goes into more depth about why the `key` thing is necessary
+
+ok that's about it for the react docs' appendices!
+
+let's see if i get anything out of reading through https://github.com/clojure/clojurescript/wiki/Quick-Start carefully
+not much new, but it does have a section at the bottom that explains cljsjs
+
+TODO - consider using a cljsjs package to generate charts in mortgage.git instead of doing them by hand
+
+next up: read through reagent source code finally; still need to figure out what a reaction is
+
