@@ -69,6 +69,23 @@ and the main thing that react buys you is that whenever a component's `this.stat
 performantly be updated to reflect that state change. so your JS code's state and your UI never fall out of sync
 with one another.
 
-super useful, but boy does vanilla react look gross so far when compared to reagent+cljs
+they do this by making you use a this.setState() function, which presumably triggers all the efficient dom-diffing-etc
+recalculation/redrawing of components and their children whenever their state changes.
 
+unrelated, stumbled across this quote in https://etscrivner.github.io/posts/2014/10/building-large-flask-apps-in-the-real-world/
+"""Organize by principle of least suprise. Ask yourself, "How would I organize this so that someone using Notepad
+with a good grasp on the programming language would be able to find and edit any arbitrary component?""""
 
+back to react - in https://facebook.github.io/react/docs/interactivity-and-dynamic-uis.html there's this extended treatise
+on the difference between this.state and this.props
+
+https://facebook.github.io/react/docs/multiple-components.html
+"As discussed earlier, a component cannot mutate its props — they are always consistent with what its owner sets them to.
+This fundamental invariant leads to UIs that are guaranteed to be consistent."
+
+https://facebook.github.io/react/docs/reusable-components.html describes a way to enforce type constraints on your this.props -
+primarily described as useful for when you're writing general reusable components (button or whatever) and want to make sure
+that they're always used in the right way. neat!
+
+looking forward to reading https://facebook.github.io/react/docs/working-with-the-browser.html#component-lifecycle , it's the
+main article i was looking for, i wanted to know what the hell is up with didMount, willMount, etc etc
