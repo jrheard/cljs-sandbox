@@ -128,4 +128,29 @@ not much new, but it does have a section at the bottom that explains cljsjs
 TODO - consider using a cljsjs package to generate charts in mortgage.git instead of doing them by hand
 
 next up: read through reagent source code finally; still need to figure out what a reaction is
+notes:
 
+src/reagent/impl/component.cljs:custom-wrapper is interesting, seems to be .. hell, i don't know what it does. but it looks relevant.
+hm, what's :cljsState? seems relevant
+****src/reagent/dom.cljs:render is the entry point
+dom.cljs has a private `roots` atom, which maps DOM nodes to [component dom-node] tuples, and is how reagent keeps track of
+  what components have been mounted and where
+template.cljs:as-element is where hiccup forms are turned into react elements (how does this differ from a component?)
+  relies heavily on vec-to-elem - that function's support for tags like :div.bar>a.foo is interesting
+
+ok, Reaction is a type that's specified in src/reagent/ratom.cljs . so what does it mean?
+jesus, this with-let macro is scary
+how does RAtom relate to Reaction?
+and what's a Track?
+and an RCursor?
+ok, track and track! are documented in core.cljs
+RCursor is documented there too
+ok so really i should just read through core.cljs and its docstrings first
+
+hrm, i note that "reaction" is not mentioned in core.cljs at all
+
+lol i have no idea how ratoms work
+really having trouble tracing the IDeref rabbit hole
+doesn't seem like there's anything going on here, but there must be something!
+
+god i guess i need to read the fucking re-frame manifesto
