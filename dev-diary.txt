@@ -154,3 +154,44 @@ really having trouble tracing the IDeref rabbit hole
 doesn't seem like there's anything going on here, but there must be something!
 
 god i guess i need to read the fucking re-frame manifesto
+
+nvm ok it looks like i was looking in the wrong place this whole time maybe?
+in component.js:static-fns, (ratom/run-in-reaction) is invoked
+this might be the entry point re: reactivity
+
+okokokokok
+so reagent components all have a :render function that does all of its work in a (ratom/run-in-reaction) block
+and what that basically does is set up a new Reaction, bind *ratom-context* to it, and then "render" the component
+(which i think basically just means, like, call it and expand it out so it's a big tree of nested hiccup-style vectors).
+so while that render process is happening - while the functions that calculate your UI are being evaluated -
+whenever a RAtom is deref'd, `notify-deref-watcher!` is called, and that RAtom instance is stuffed into the Reaction's .-captured
+list.
+
+i sort of lose the thread of things after this point, though.
+i guess that all initializes the reaction? so what happens when someone updates a watched RAtom?
+ok my current hunch is that the Reaction must have a bunch of watches, one for each relevant RAtom. where would that happen?
+in deref-capture, which is run at reaction initialization time, the reagent component is rendered/evaluated, and all of the
+RAtoms that were deref'd in the process are stuffed onto the Reaction's .-captured list, as per above.
+*after* that, ._update-watching is called on the Reaction.
+ok so for each deref'd RAtom, the Reaction sets up a watch; whenever any of those RAtoms is changed, `handle-reaction-change`
+  is (somehow) invoked.
+there's some trickery after this, some vaguely tangled stuff going on between ratom.cljs and batching.cljs
+flush! is involved
+it all ends up bottoming out in _run though
+
+ok so you create a reagent component via the library's interface by basically just passing in a function that returns
+a vector of vectors, and (very probably) derefs some RAtoms on the way. while setting up your component, reagent creates a Reaction,
+then evaluates/"renders" your function and keeps track of any RAtoms that were deref'd. it adds watches to each of those atoms,
+such that from now on whenever any of those atoms changes, the Reaction's ._run method is called.
+this reevaluates/rerenders your original function. okokokokok there were a lot of hops to get there, but that's how
+things are wired up.
+
+so next question: how does performance work? where does the code live that makes sure that eg if you have a function
+that returns a list of lists like [draw-thing foo bar], and `foo` and `bar` are the same as they were before, that
+(draw-thing foo bar) isn't rendered/evaluated?
+
+i think it comes down to 
+
+
+TODO look up how watches work, IWatchable, etc etc
+
