@@ -190,8 +190,27 @@ so next question: how does performance work? where does the code live that makes
 that returns a list of lists like [draw-thing foo bar], and `foo` and `bar` are the same as they were before, that
 (draw-thing foo bar) isn't rendered/evaluated?
 
-i think it comes down to 
+so the function that gets called whenever a reaction changes is component.cljs:wrap-render
 
+dissasocciated notes below
+vec-to-elem is called somewhere
+as part of its execution it calls reag-element
+which calls component/as-class
+which calls fn-to-class
+which calls create-class *on the given function's METADATA map*
+which calls cljsify
+which calls wrap-funs
+which stuffs :reagentRender into the passed-around metadata map
+
+and *that's* how :reagentRender is available when wrap-render is called. i think.
+
+it seems like at a certain point in this class-creation chain the original function is discarded and
+you just start dealing with the metadata map, and that's what a reagent class is?
+
+ok at this point i'm tempted to give up. i have a good handle on how reagent is able to find out that RAtoms have
+changed, and that it does *something* whenever they're changed. but i don't yet completely understand how performance works.
+i know that :shouldComponentUpdate must be involved, but can't figure out how exactly it fits into the whole picture.
+and my head is hurting. so i am going to take a break.
 
 TODO look up how watches work, IWatchable, etc etc
 
