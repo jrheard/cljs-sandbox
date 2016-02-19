@@ -212,5 +212,54 @@ changed, and that it does *something* whenever they're changed. but i don't yet 
 i know that :shouldComponentUpdate must be involved, but can't figure out how exactly it fits into the whole picture.
 and my head is hurting. so i am going to take a break.
 
-TODO look up how watches work, IWatchable, etc etc
+ok so reactions+ratoms are how reagent keeps track of state and knows to update things.
+but so what happens when a reaction is re-run?
+and how does the underlying react framework fit into all this?
+react's .setState() must be invoked at *some* point, right? <<------ TODO SOLVE
 
+i wish there were more documentation on what a "reagent component" is, and how it differs from a react component,
+and how the one is transformed into the other. can't help but feel like schema would be very useful here.
+
+so is it the case that the Reaction has a watch put on *it*? like, something else is watching the Reaction, and when it's _run,
+that other thing is updated?
+
+pausing for now to read some other stuff, note to self: current mystery is, where/when does react's setState get called
+
+https://reagent-project.github.io/news/reagent-is-async.html appears to describe the batching portion of the library
+"""The downside to async rendering is that you can no longer depend on changes to atoms being immediately available in the DOM.
+(Actually, you couldn’t before either, since React.js itself does batching inside event handlers.)
+This may make testing a bit more verbose: you now have to call reagent.core/flush to force Reagent to synchronize state with the DOM."""
+
+TODO - for mortgage, try several atoms instead of one; can also create the input-chan on initialization
+
+https://reagent-project.github.io/news/news050.html describes cursors, also wrap
+"The result from wrap is just a simple and light-weight value, that happens to look like an atom – it doesn’t by itself
+trigger any re-renderings like reagent.core/atom does. That means that it is probably only useful to pass from one
+component to another, and that the callback function in the end must cause a ”real” atom to change."
+
+TODO - figure out if i should be using wrap ever
+TODO or should i be using cursors? should ask in slack
+
+======
+
+2/19/16
+
+https://reagent-project.github.io/news/news060-alpha.html explains how track can help performance
+
+copy-pasting some notes in made in the #reagent slack channel:
+
+at this point i understand how RAtoms work, like how they're able to notify the reagent system
+  (via their parent Reaction instance) that their state has changed, and that the root component
+  should be recalculated - but i haven't yet figured out, like, what happens next
+in particular i haven't been able to find anything that looks like a react setState call, which
+  i'd imagine has got to be somewhere in there
+i haven't used react before, but i read through the docs a couple days ago and it looked like
+  setState was the specific way that you communicate updates to the framework
+anyway i'm gonna keep readin'
+hrm. from the om post - "Thus we don't need React operations like setState, which exists to support
+  both efficient subtree updating as well as good object-oriented style. Subtree updating for
+  Om starting from root is always lightning fast because we're just doing reference equality checks all the way down."
+re: my early setstate puzzling, so maybe reagent doesn't have setstate either? i don't understand how anything works without it though
+(via https://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/ )
+post goes on to say that "we always re-render from the root" - again, this is om, but that matches what i saw in reagent source
+ok i think it bottoms out in the forceUpdate call in batching.cljs
