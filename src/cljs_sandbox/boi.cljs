@@ -71,3 +71,10 @@
                         (js/document.getElementById "content"))
 
     (handle-events state event-chan)))
+
+
+; TODO - rather than listening to each keyboard event and eg moving right every time we see a :right event,
+; keep track of the player's direction in state
+; when the key is raised again, fire a :stop-moving
+; and have a go-loop that swap!s (move player direction magnitude) using (r/next-tick)
+; per https://reagent-project.github.io/news/binary-clock.html
