@@ -26,9 +26,9 @@
                 :source-paths ["src"]
 
                 ;; If no code is to be run, set :figwheel true for continued automagical reloading
-                :figwheel {:on-jsload "cljs-sandbox.reagent-sandbox/main"}
+                :figwheel {:on-jsload "cljs-sandbox.boi/main"}
 
-                :compiler {:main cljs-sandbox.reagent-sandbox
+                :compiler {:main cljs-sandbox.boi
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/cljs_sandbox.js"
                            :output-dir "resources/public/js/compiled/out"
@@ -39,7 +39,7 @@
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/cljs_sandbox.js"
-                           :main cljs-sandbox.core
+                           :main cljs-sandbox.boi
                            :optimizations :advanced
                            :pretty-print false}}]}
 

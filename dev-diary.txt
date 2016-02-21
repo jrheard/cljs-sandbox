@@ -349,3 +349,22 @@ https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
 anyway tbh i think i should probably be using canvas instead of svg for a bullet-hell shooter/rpg
 i think reagent+svg/divs/whatever makes tons of sense for turn-based games like cljstone
 but for a boi clone, it really seems like square peg round hole
+
+css/svg/etc animation links for later if i end up wanting them:
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Transitions/Using_CSS_transitions
+
+anyway overall it looks like css transformations/animations are useful for situations where, like,
+you've got a particular UI that you want to animate - but i don't think they're at all relevant for
+a game in a web browser, it just doesn't make any sense
+
+re: reagent and canvas (already expected these two wouldn't work together):
+https://www.reddit.com/r/Clojure/comments/3cq5hg/can_reagent_components_work_with_html_canvas/
+"No, and I've tried: https://github.com/gzmask/embodier-gcode-webgl"
+
+
+
+canvas resources:
+https://github.com/rm-hull/monet [seems abandoned; TODO read anyway, might have good ideas]
+
+core.async and keyboard events: https://github.com/bdrillard/async-key-events
