@@ -1,8 +1,8 @@
 (ns cljs-sandbox.boi
   (:require [reagent.core :as r]
             [schema.core :as s]
-            [goog.events :as events]
-            [goog.events.KeyCodes :as key-codes])
+            [goog.events :as events])
+  (:import [goog.events KeyCodes])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]
                    [schema.core :as sm])
   (:use [cljs.core.async :only [chan <! >! put! timeout]]))
@@ -18,6 +18,7 @@
 (sm/defn move :- Player
   [player :- Player
    direction :- (s/enum :left :right :up :down)]
+  (js/console.log move)
   (let [[axis amount] (case direction
                         :left [:x -1]
                         :right [:x 1]
@@ -38,47 +39,35 @@
 
 (defonce state (r/atom {:player (make-player)}))
 
-(defn handle-events [state event-chan]
-  (events/removeAll (.-body js/document))
+(def move-keys #{KeyCodes.DOWN KeyCodes.LEFT KeyCodes.UP KeyCodes.RIGHT})
 
+(defn listen-to-keyboard-inputs [event-chan]
+  (events/removeAll (.-body js/document))
   (events/listen
     (.-body js/document)
     (.-KEYDOWN events/EventType)
     (fn [event]
-      (.preventDefault event)
-      (js/console.log event)
-      (put! event-chan (.-keyCode event))
-      false))
+      (let [code (.-keyCode event)]
+        (when (contains? move-keys code)
+          (.preventDefault event)
+          (put! event-chan {:type      :move
+                            :direction ({KeyCodes.DOWN  :down
+                                         KeyCodes.UP    :up
+                                         KeyCodes.LEFT  :left
+                                         KeyCodes.RIGHT :right} code)}))))))
+
+(defn handle-events [state event-chan]
+  (listen-to-keyboard-inputs event-chan)
 
   (go-loop []
     (let [msg (<! event-chan)]
-      (js/console.log msg)
-      (recur)
-      #_(case (:type msg)
-          :move (swap! state move (msg :direction))
-
-          (recur)))
-    )
-  )
+      (swap! state update-in [:player] move (:direction msg))
+      (js/console.log (clj->js (:direction msg)))
+      (recur))))
 
 (defn ^:export main []
   (let [event-chan (chan)]
     (r/render-component [draw-state state]
                         (js/document.getElementById "content"))
 
-    (js/console.log key-codes)
     (handle-events state event-chan)))
-
-(comment
-  (.-DOWN events/Key)
-  events/Key.DOWN
-
-  events/KeyCodes
-
-  (.-DOWN key-codes)
-  key-codes/SPACE
-
-  goog.events.KeyCodes/DOWN
-
-  goog.events.KeyCodes
-  )

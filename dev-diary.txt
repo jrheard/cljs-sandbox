@@ -368,3 +368,6 @@ canvas resources:
 https://github.com/rm-hull/monet [seems abandoned; TODO read anyway, might have good ideas]
 
 core.async and keyboard events: https://github.com/bdrillard/async-key-events
+
+had trouble getting access to goog.events.KeyCodes, was given
+http://clojurescriptmadeeasy.com/blog/when-do-i-use-require-vs-import.html in slack
