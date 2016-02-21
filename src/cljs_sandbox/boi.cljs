@@ -33,17 +33,19 @@
 (defonce state (r/atom {:player (make-player)}))
 
 (defn handle-events [state event-chan]
+  (events/removeAll (.-body js/document))
+
   (events/listen
     (.-body js/document)
     (.-KEYDOWN events/EventType)
     (fn [event]
       (.preventDefault event)
-      (put! event-chan event)
+      (put! event-chan (.-keyCode event))
       false))
 
   (go-loop []
     (let [msg (<! event-chan)]
-      (js/console.log (.-keyCode msg))
+      (js/console.log msg)
       (recur)
       #_(case (:type msg)
         :move (swap! state move (msg :direction))
@@ -57,13 +59,7 @@
     (r/render-component [draw-state state]
                         (js/document.getElementById "content"))
 
-    (handle-events state event-chan)
-
-    )
-  )
-
-
-; TODO - tear down old event listeners / old goloop
+    (handle-events state event-chan)))
 
 (comment
 
