@@ -1,7 +1,8 @@
 (ns cljs-sandbox.boi
   (:require [reagent.core :as r]
             [schema.core :as s]
-            [goog.events :as events])
+            [goog.events :as events]
+            [goog.events.KeyCodes :as key-codes])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]
                    [schema.core :as sm])
   (:use [cljs.core.async :only [chan <! >! put! timeout]]))
@@ -17,7 +18,12 @@
 (sm/defn move :- Player
   [player :- Player
    direction :- (s/enum :left :right :up :down)]
-  )
+  (let [[axis amount] (case direction
+                        :left [:x -1]
+                        :right [:x 1]
+                        :up [:y -1]
+                        :down [:y 1])]
+    (update-in player [axis] + amount)))
 
 (sm/defn draw-player [player :- Player]
   [:rect {:x      (player :x)
@@ -40,6 +46,7 @@
     (.-KEYDOWN events/EventType)
     (fn [event]
       (.preventDefault event)
+      (js/console.log event)
       (put! event-chan (.-keyCode event))
       false))
 
@@ -48,9 +55,9 @@
       (js/console.log msg)
       (recur)
       #_(case (:type msg)
-        :move (swap! state move (msg :direction))
+          :move (swap! state move (msg :direction))
 
-        (recur)))
+          (recur)))
     )
   )
 
@@ -59,9 +66,19 @@
     (r/render-component [draw-state state]
                         (js/document.getElementById "content"))
 
+    (js/console.log key-codes)
     (handle-events state event-chan)))
 
 (comment
+  (.-DOWN events/Key)
+  events/Key.DOWN
 
+  events/KeyCodes
 
+  (.-DOWN key-codes)
+  key-codes/SPACE
+
+  goog.events.KeyCodes/DOWN
+
+  goog.events.KeyCodes
   )
