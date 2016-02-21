@@ -263,3 +263,89 @@ re: my early setstate puzzling, so maybe reagent doesn't have setstate either? i
 (via https://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/ )
 post goes on to say that "we always re-render from the root" - again, this is om, but that matches what i saw in reagent source
 ok i think it bottoms out in the forceUpdate call in batching.cljs
+
+https://groups.google.com/forum/#!topic/reagent-project/FdGtS47QAGw is a good one
+
+********
+from mikethompson:
+@jrheard:  Reagent does not re-render from the root each time.   there are various tutorials at the bottom of
+this page which will should give you a clean mental model:  https://github.com/Day8/re-frame/wiki
+(warning: clean mental models sometimes differ in details from what the code actually does, so
+certainly reading the reagent code is more accurate  :-))
+********
+
+great links at the bottom of that wiki page.
+
+in the form-2 example in https://github.com/Day8/re-frame/wiki/Creating%20Reagent%20Components ,
+i don't understand why you don't end up with a jillion setTimeouts all incrementing the same atom
+[some time later] oh right, setTimeout != setInterval, gotcha
+
+https://github.com/Day8/re-frame/wiki/Using-%5B%5D-instead-of-%28%29 has good notes on () vs []
+
+https://github.com/Day8/re-frame/wiki/When-do-components-update%3F is gold
+
+After a Component's renderer runs and produces hiccup, Reagent interprets it. When it processes the output
+of greet-family, it will check to see if these 3 rerendered Components themselves need rerendering.
+The test Reagent uses is a simple one: for each Component, are the newly supplied props different to
+those supplied in the last render. Have they "changed"? <------******
+
+"props flow from the parent. A Component can't get new props unless its parent rerenders."
+
+but what if a child component listens to a ratom that its parents don't know about?
+right, the page goes on to address that specific situation.
+
+this page is real good
+
+hm. it goes on to claim behavior that's counter to what i saw in mortgage, though - it sure looked to me
+like passing my `state` ratom around was causing a bunch of rerenders, but this page claims it won't.
+
+hm - i tried it myself, and confirmed the behavior that the page described.
+so i guess the issue *wasn't* that i was passing ratoms around - it was that i was passing `selected-mortgage`
+to `draw-bar`, rather than passing `is-selected-mortgage`. makes sense.
+
+so why am i seeing such bad performance in that project?
+
+reading through the reagent project's github issues now
+
+interesting ones:
+https://github.com/reagent-project/reagent/issues/212
+https://github.com/reagent-project/reagent/issues/209
+https://www.reddit.com/r/Clojure/comments/3vk58p/a_rant_on_om_next/
+
+"No the problem is, you have to deref all ratoms on every render (or at least the first render).
+Let's say you always want info from atom A and sometimes from B. If you don't deref B during the
+first render call, it will never be linked, and therefore if it is changed later on it will have
+no effect on the component in question."
+
+interesting!
+
+TODO read http://hoplon.io/
+TODO look into om/next
+
+====
+
+
+2/20/16
+
+http://www.mattgreer.org/articles/a-game-made-with-reagent/ talks about using css animations; TODO
+
+https://rafalcieslak.svbtle.com/9-tips-for-clojurescript-beginners has a few good links
+mentions checkout dependencies
+
+======
+
+2/21/16
+
+https://developer.mozilla.org/en-US/docs/Games/Techniques/Efficient_animation_for_web_games
+****** this article appears to be super good
+has tips on how to avoid drawing things multiple times per frame (which would be a waste)
+mentions https://github.com/BernieSumption/animator.js which is super old
+cf http://blog.berniesumption.com/software/animator/
+" For a modern library that exposes CSS animations through a similar API, I recommend jQuery.Transit."
+so maybe the mdn article above is real out of date?
+
+https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
+
+anyway tbh i think i should probably be using canvas instead of svg for a bullet-hell shooter/rpg
+i think reagent+svg/divs/whatever makes tons of sense for turn-based games like cljstone
+but for a boi clone, it really seems like square peg round hole
