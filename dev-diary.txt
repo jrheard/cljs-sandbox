@@ -464,3 +464,43 @@ widely used in the game industry and performs shockingly well for DOM updates wh
 simple techniques: diffing and laziness." *******
 
 "game industry" phrase links to https://en.wikipedia.org/wiki/Scene_graph
+
+https://pchiusano.github.io/2014-07-02/css-is-unnecessary.html advocates using a lang like elm instead of css
+"A little reflection on the history of software reveals abstraction as the primary means by which humans
+make increasingly complex software possible and comprehensible."
+
+https://news.ycombinator.com/item?id=9797973 om rant thread
+
+
+************
+okokok here's what i want to build
+bullet-hell, twin-stick, top-down, boi-style combat/gameplay (except tear height, fuck that)
+boi-style items
+diablo-style levels (randomly generated floors rather than rooms; hallways, forests, whatever)
+simple RoR-style leveling (don't care about skill trees / talents, just want to avoid staying at base damage
+  forever like you often do in BoI)
+
+updated state sketch
+state: {:entities [Entity]
+        :mode (s/enum :menu :loading :normal :etc)}
+Entity: {:id s/Int
+         :type (s/enum :player :bullet :monster :wall :etc)
+         :components [Component]}
+
+************
+
+elm architecture notes:
+https://gist.github.com/evancz/2b2ba366cae1887fe621
+talks about advantages of having a centralized home of application state - single source of truth
+
+
+what does main game loop look like?
+
+update-movers
+calculate-collisions
+update-health (? or does calculate-collisions do this? what does calculate-collisions do? add to a queue of
+  unresolved collisions? something else?)
+perform-attacks (player and monsters can have an :attacking state, with an :attacks-per-second or something)
+
+
+bullets can't collide with other bullets
