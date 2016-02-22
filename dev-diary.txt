@@ -426,3 +426,41 @@ Entity: {:id s/Int
 having an id helps for generating ^keys
 what do rooms look like? are they some sort of, like, container components?
 or do we have an :entities list and a :rooms list? the player's only in one room at a time if that's relevant
+
+=======
+
+2/22/16
+
+https://www.youtube.com/watch?v=9sc8Pyc51uU
+******* great talk on graphql / relay
+
+https://github.com/devknoll/graphql-resources graphql links
+
+https://www.youtube.com/watch?v=UoZyyo2Bwr8 talk on hoplon/javelin
+difficult to tell how to reason about it with regard to reagent
+he trashtalks the virtual dom for a while but i don't think all his criticisms apply
+not a super big fan of the tone of this talk in general, the tech looks useful but not much different from reagent
+
+reading https://github.com/evancz/elm-architecture-tutorial/
+
+TODO for boi what will movement look like? does a player have a :bounding-box {x y width height} and a
+:movement-state [:down :right]? that could work.
+
+at some point i want to read the react dom-diffing code but i have 600 other tabs to process first
+
+ok time for http://elm-lang.org/guide/reactivity
+"Note: It is usually best to use signals as little as possible. When it comes to writing nice modular code,
+you should primarily use normal functions and values. If you find yourself stuck with a signal of signals,
+ask yourself “how can I model this explicitly with functions and values?”"
+
+https://www.reddit.com/r/elm/comments/3s6lhb/learning_elm_vs_haskell_as_an_intro_to_functional/ elm vs haskell
+
+interesting notes on virtual dom / diffing: https://gist.github.com/Raynos/8414846
+http://calendar.perfplanet.com/2013/diff/
+
+reading http://elm-lang.org/blog/blazing-fast-html
+"Virtual DOM sounds pretty slow, right? Create a whole new scene on every frame? This technique is actually
+widely used in the game industry and performs shockingly well for DOM updates when you use two relatively
+simple techniques: diffing and laziness." *******
+
+"game industry" phrase links to https://en.wikipedia.org/wiki/Scene_graph
