@@ -24,7 +24,7 @@
                         :right [:x 1]
                         :up [:y -1]
                         :down [:y 1])]
-    (update-in player [axis] + amount)))
+    (update-in player [axis] + (* 3 amount))))
 
 (sm/defn draw-player [player :- Player]
   [:rect {:x      (player :x)

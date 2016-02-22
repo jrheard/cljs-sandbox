@@ -363,7 +363,6 @@ https://www.reddit.com/r/Clojure/comments/3cq5hg/can_reagent_components_work_wit
 "No, and I've tried: https://github.com/gzmask/embodier-gcode-webgl"
 
 
-
 canvas resources:
 https://github.com/rm-hull/monet [seems abandoned; TODO read anyway, might have good ideas]
 
@@ -371,3 +370,13 @@ core.async and keyboard events: https://github.com/bdrillard/async-key-events
 
 had trouble getting access to goog.events.KeyCodes, was given
 http://clojurescriptmadeeasy.com/blog/when-do-i-use-require-vs-import.html in slack
+
+TODO what the hell is an entity component system
+https://github.com/markmandel/brute
+https://github.com/muhuk/clecs
+https://github.com/weavejester/ittyon
+
+TODO what is http://wercker.com/
+
+http://hueypetersen.com/posts/2016/02/13/om-next-from-a-relay-graphql-perspective/
+incomprehensible om.next/relay/redux/graphql post
