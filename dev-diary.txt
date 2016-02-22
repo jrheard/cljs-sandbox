@@ -380,3 +380,49 @@ TODO what is http://wercker.com/
 
 http://hueypetersen.com/posts/2016/02/13/om-next-from-a-relay-graphql-perspective/
 incomprehensible om.next/relay/redux/graphql post
+
+https://eklitzke.org/effectively-using-bash-profile evan notes on .bash_profile vs .bashrc
+
+http://hueypetersen.com/posts/2013/08/02/the-state-machines-of-core-async/ core.async implementation
+http://hueypetersen.com/posts/2013/07/10/code-read-of-core-async-timeouts/ also good post on timeout!
+
+http://hueypetersen.com/posts/2013/06/17/angular_is_slow/ - unrelated, but good quote:
+"Your model is not your view model. It can be for simple cases, but as soon as you start feeling
+friction you want to let the view model evolve instead of changing your domain models to suit the view."
+****** gold stuff
+
+ok so what is https://github.com/pedestal/pedestal
+i remember this being announced at clojure/west a while back but don't know anything about it
+lol "Our primary focus for the near future is Pedestal documentation, sample applications and
+improving general ease of use."
+so i think i can be forgiven for closing this tab and checking back later
+https://github.com/pedestal/pedestal/tree/master/guides/documentation for the record
+
+edmund says to use https://github.com/edmund-huber/sssgen for my blog
+i'm sure he's not biased
+
+https://en.wikipedia.org/wiki/Entity_component_system - see "game example" section
+really good info
+one of the main touted advantages is "composability instead of inheritance" - so is ECS still relevant in cljs?
+the description of components sounds a lot like clj/s protocols
+
+https://stackoverflow.com/questions/1901251/component-based-game-engine-design
+the guy in that answer says use FRP instead of ECS
+
+https://web.archive.org/web/20140719094839/http://www.altdev.co/2011/10/08/a-handful-of-components/
+********* good shit
+"The health component is probably the component that I re-use the most. Not just a health value that goes up
+and down it also keeps track of invulnerability, regeneration and poison. It also looks after the entities
+damage modifies with the following types currently supported Fire, Ice, Melee, Projectile, Magic and Crushing"
+
+notes before i forget
+
+what does game state end up looking like? do we end up adopting some ecs concepts and going with like
+
+state: {:entities [Entity]}
+Entity: {:id s/Int
+         :components [Component]}
+
+having an id helps for generating ^keys
+what do rooms look like? are they some sort of, like, container components?
+or do we have an :entities list and a :rooms list? the player's only in one room at a time if that's relevant
