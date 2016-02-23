@@ -497,6 +497,7 @@ what does main game loop look like?
 update-movement-state ; let monsters decide to aggro, leash, change their direction, etc
 update-movement-speeds ; update dx, dy
 update-positions ; update x, y (should we combine this with update-movement-speeds? unclear)
+update-status-effects ; poison, invincibility, etc
 calculate-collisions
 update-health (? or does calculate-collisions do this? what does calculate-collisions do? add to a queue of
   unresolved collisions? something else?)
@@ -507,7 +508,12 @@ what else?
 can these things be done in parallel? how?
 i guess you could have each use pmap instead of map, that could work pretty well actually
 
+what does poisoning look like? a PoisonComponent and a poison-system?
+maybe StatusEffects and an apply-status-effects system
+i kinda like that a lot actually
+
 bullets can't collide with other bullets
+so there's an Owned component maybe
 
 interesting notes on virtual dom / diffing: https://gist.github.com/Raynos/8414846
 http://calendar.perfplanet.com/2013/diff/
@@ -588,4 +594,31 @@ components - data
 systems - behavior
 entities - id'd collections of data
 
+"Mathematically-speaking, an Entity is a database Key, just as you’d see in any RDBMS.
+Likewise, from a purely abstracted point of view, the “set of component-instances that comprise
+Entity #7742” is, literally, a database Query.
+THIS is why I said at the start that, ideally, you do NOT want to store your component-instances
+as a list inside a struct/class representation of each Entity. Fundamentally, that set is NOT
+defined as a list (a list is a static thing, it’s members don’t change without you changing them),
+it’s defined as a query (whose members are always changing, whether you want them to or not),
+and using one where really you wanted the other tends to cause problems in the long term."
 
+hm - does all that still apply in clojure-land?
+yeah prob not he says this is mainly for giant server-side games, which makes sense but
+won't be super relevant for my tiny little client-side game
+
+http://cowboyprogramming.com/2007/01/05/evolve-your-heirachy/
+good article, not much different from the stuff above in t-machine
+does have stories about introducing this design architecture into a preexisting system, neat
+
+"Ideally, components should not know about each other. However, in a practical world, there
+are always going to be dependencies between specific components. Performance issues also
+dictate that components should be able to quickly access other components. Initially we had
+all component references going through the component manager, however when this started using
+up over 5% of our CPU time, we allowed the components to store pointers to one another, and
+call member functions in other components directly."
+hrm
+
+http://scottbilas.com/files/2002/gdc_san_jose/game_objects_slides.pdf
+"– Examples are trees, bushes, monsters, levers, waypoint markers, doors, heroes, inventory items
+ – Many are “pure logic”, never see them (triggers, elevator movers, camera sequences)"
