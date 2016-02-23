@@ -455,9 +455,6 @@ ask yourself “how can I model this explicitly with functions and values?”"
 
 https://www.reddit.com/r/elm/comments/3s6lhb/learning_elm_vs_haskell_as_an_intro_to_functional/ elm vs haskell
 
-interesting notes on virtual dom / diffing: https://gist.github.com/Raynos/8414846
-http://calendar.perfplanet.com/2013/diff/
-
 reading http://elm-lang.org/blog/blazing-fast-html
 "Virtual DOM sounds pretty slow, right? Create a whole new scene on every frame? This technique is actually
 widely used in the game industry and performs shockingly well for DOM updates when you use two relatively
@@ -496,11 +493,49 @@ talks about advantages of having a centralized home of application state - singl
 
 what does main game loop look like?
 
-update-movers
+`
+update-movement-state ; let monsters decide to aggro, leash, change their direction, etc
+update-positions
 calculate-collisions
 update-health (? or does calculate-collisions do this? what does calculate-collisions do? add to a queue of
   unresolved collisions? something else?)
 perform-attacks (player and monsters can have an :attacking state, with an :attacks-per-second or something)
 
+; what else?
+`
 
 bullets can't collide with other bullets
+
+interesting notes on virtual dom / diffing: https://gist.github.com/Raynos/8414846
+http://calendar.perfplanet.com/2013/diff/
+good notes on setState effects, dirtiness setting, etc
+
+http://t-machine.org/index.php/2012/03/16/entity-systems-what-makes-good-components-good-entities/
+lots of example entities, components, systems
+
+"Ideally, you add a new component when you have a new “dimension” to the game objects. For instance,
+if you’re adding a physics System, you may not need to add any new Components – it might be that all
+you need is Location (containing x,y,x position and dx,dy,dz velocity) and RenderState (containing
+screen-pixels x,y) – and that you already have those components."
+
+***** note re xyz position, dxdydz velocity ******
+
+note warnings re: "Many systems per component" being a warning sign
+
+the two versions of badness listed:
+
+You have – say – 8 variables in the struct where you should instead have two structs (components),
+one with 5 variables, the other with 3.
+You have – say – 4 variables in the struct, but different systems are using those variables to mean
+different things. It works OK for now, but it’s very fragile – as soon as the different meanings
+diverge even a little, your code is going to start breaking
+
+goood shit.
+
+in the comments:
+"In regard to components a good idea at times is to stuff as much data into a single component that
+covers the complete purpose. This cuts down referencing multiple components over and over and there
+is definitely a speed up in a tight loop. A good example of this is physics where in my efforts I
+provide a default “KinematicsParams” component that has velocity, position, rotation, angular velocity,
+angular rotation, etc. etc. all stuffed into one data component. The reason being is that instead of
+referencing a single component for each parameter it’s much easier / quicker to reference one."
