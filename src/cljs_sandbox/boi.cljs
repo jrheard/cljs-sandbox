@@ -18,7 +18,6 @@
 (sm/defn move :- Player
   [player :- Player
    direction :- (s/enum :left :right :up :down)]
-  (js/console.log move)
   (let [[axis amount] (case direction
                         :left [:x -1]
                         :right [:x 1]
@@ -70,7 +69,13 @@
     (r/render-component [draw-state state]
                         (js/document.getElementById "content"))
 
+    (js/console.log js/window.requestAnimationFrame)
+    (js/window.requestAnimationFrame (fn a [x]
+                                       (js/console.log x)))
+
+
     (handle-events state event-chan)))
+
 
 
 ; TODO - rather than listening to each keyboard event and eg moving right every time we see a :right event,
