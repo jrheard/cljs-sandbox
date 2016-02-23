@@ -521,7 +521,6 @@ screen-pixels x,y) – and that you already have those components."
 ***** note re xyz position, dxdydz velocity ******
 
 note warnings re: "Many systems per component" being a warning sign
-
 the two versions of badness listed:
 
 You have – say – 8 variables in the struct where you should instead have two structs (components),
@@ -530,7 +529,7 @@ You have – say – 4 variables in the struct, but different systems are using 
 different things. It works OK for now, but it’s very fragile – as soon as the different meanings
 diverge even a little, your code is going to start breaking
 
-goood shit.
+goood shit in this article man
 
 in the comments:
 "In regard to components a good idea at times is to stuff as much data into a single component that
@@ -539,3 +538,24 @@ is definitely a speed up in a tight loop. A good example of this is physics wher
 provide a default “KinematicsParams” component that has velocity, position, rotation, angular velocity,
 angular rotation, etc. etc. all stuffed into one data component. The reason being is that instead of
 referencing a single component for each parameter it’s much easier / quicker to reference one."
+
+"Q: What are the thoughts about having components that dont have any data, but instead exists to label
+a entity in a way. A: I’m all for it."
+
+http://t-machine.org/wp-content/uploads/Aliqua-progress-2015-BUUG-v3.pdf describes entity systems
+
+via http://entity-systems.wikidot.com/ -
+Entity - A container into which components can be added,
+  ****usually hierarchical (any Entity can have sub-Entities).****
+
+"Whereas in an inheritance-based design, an enemy may have a complex inheritance chain such as
+Damageable <- Actor <- GroundBasedActor <- Enemy <- ZombieEnemy, in a C/ES-based design you might
+have a Health component, a GroundBasedMovement component and a ZombieAi component added to
+an entity named ZombieEnemy."
+
+"Rendering and updating may take place either by traversing the entire entity tree (slow), by
+having entities register themselves to the respective services (service locator hell) or in a
+hybrid approach where the renderer/clock system remember which components they found in the tree
+while entities merely provide a change notification if components are added to them or removed
+from them, allowing the renderer/clock system to re-check that part of the tree (complex).
+This aspect of the design is however not part of the C/ES pattern."
