@@ -492,17 +492,20 @@ talks about advantages of having a centralized home of application state - singl
 
 
 what does main game loop look like?
-
+*****
 `
 update-movement-state ; let monsters decide to aggro, leash, change their direction, etc
-update-positions
+update-movement-speeds ; update dx, dy
+update-positions ; update x, y (should we combine this with update-movement-speeds? unclear)
 calculate-collisions
 update-health (? or does calculate-collisions do this? what does calculate-collisions do? add to a queue of
   unresolved collisions? something else?)
 perform-attacks (player and monsters can have an :attacking state, with an :attacks-per-second or something)
-
-; what else?
 `
+******
+what else?
+can these things be done in parallel? how?
+i guess you could have each use pmap instead of map, that could work pretty well actually
 
 bullets can't collide with other bullets
 
@@ -559,3 +562,30 @@ hybrid approach where the renderer/clock system remember which components they f
 while entities merely provide a change notification if components are added to them or removed
 from them, allowing the renderer/clock system to re-check that part of the tree (complex).
 This aspect of the design is however not part of the C/ES pattern."
+
+http://t-machine.org/index.php/2007/11/11/entity-systems-are-the-future-of-mmog-development-part-2/
+definition of entities/components
+"For every discernible “thing” in your game-world, you have one Entity. Entities have no data and no methods."
+
+all this stuff is very clojure-y - clear separation + composition of data and behavior
+"Typical Systems in a game would be: Rendering System, Animation System, Input System, etc.
+ The Rendering system wakes up every 16 milliseconds, renders every Entity that has the Renderable
+ Component, and then goes back to sleep."
+
+"But the vast majority of game development is orders of magnitude more complex than Chess.
+If you try – for instance – to write a computer game of Chess, that has AI … you certainly
+don’t have “a movement and position component”.
+Instead, you have: movement, position, potential positions this turn, potential positions on
+future turns, threat radius, threatened squares, tactical options, strategic options, available
+“plays” (famous chess strategies), enemy-histories-per-piece (what does your opponent tend
+to do with pawns?) … etc."
+
+http://t-machine.org/index.php/2007/12/22/entity-systems-are-the-future-of-mmog-development-part-3/
+"So, don’t be tempted into hierarchical encoding, and definitely don’t do ANY encoding in the entity names"
+“a System essentially provides the method-implementation for Components”.
+
+components - data
+systems - behavior
+entities - id'd collections of data
+
+
