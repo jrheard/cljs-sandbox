@@ -5,6 +5,8 @@
                    [schema.core :as sm])
   (:use [cljs.core.async :only [chan <! >! put! timeout]]))
 
+(enable-console-print!)
+
 (sm/defschema Square {:x           s/Int
                       :y           s/Int
                       :side-length s/Int
@@ -55,4 +57,44 @@
   (js/window.requestAnimationFrame (fn frame [ts]
                                      (swap! state update-in [:squares] #(map next-square-state %))
                                      (js/window.requestAnimationFrame frame))))
+
+
+
+(def player-map
+  {:id 123
+   :shape {:width 10
+           :height 10
+           :type :rectangle
+           :center {:x 50
+                    :y 50}}
+   :motion {:velocity {:x 5
+                       :y 2}
+            :max-acceleration 2
+            :affected-by-friction true}
+   :collision {:type :good-guy}
+   :renderable true})
+
+(defrecord Entity [id shape motion collision renderable])
+(defrecord Vector2 [x y])
+(defrecord Shape [width height type center])
+(defrecord Motion [velocity max-acceleration affected-by-friction])
+(defrecord Collision [type])
+
+(def player-record (Entity. 123
+                            (Shape. 10 10 :rectangle (Vector2. 50 50))
+                            (Motion. (Vector2. 5 2) 2 true)
+                            (Collision. :good-guy)
+                            true))
+
+(simple-benchmark
+  []
+  (get-in player-map [:shape :center :x])
+  10000000
+  )
+
+(simple-benchmark
+  []
+  (get-in player-record [:shape :center :x])
+  10000000
+  )
 
